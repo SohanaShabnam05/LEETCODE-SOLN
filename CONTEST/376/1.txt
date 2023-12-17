@@ -1,0 +1,37 @@
+class Solution {
+public:
+    vector<int> findMissingAndRepeatedValues(vector<vector<int>>& grid) {
+        int n = grid.size();
+        int len = grid[0].size();
+        int value = n * len;
+
+        vector<int> ans(2, 0); 
+
+        unordered_set<int> st;
+        unordered_set<int> stt;
+
+        for (int i = 1; i <= value; i++) {
+            st.insert(i);
+        }
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < len; j++) {
+                int val = grid[i][j];
+
+                st.erase(val);
+
+                if (stt.count(val)) {
+                    ans[0] = val;  
+                } else {
+                    stt.insert(val);
+                }
+            }
+        }
+
+        for (auto i : st) {
+            ans[1] = i;  
+        }
+
+        return ans;
+    }
+};

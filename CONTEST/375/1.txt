@@ -1,0 +1,22 @@
+class Solution {
+public:
+    int countTestedDevices(vector<int>& bp) {
+        int n = bp.size();
+        
+        int ct = 0;
+        
+        for(int i=0; i<n; i++)
+        {
+            if(bp[i] > 0)
+            {
+                ct++;
+                
+                for(int j=i+1; j<n; j++)
+                {
+                    bp[j] = max(0, bp[j] - 1);
+                }
+            }
+        }
+        return ct;
+    }
+};

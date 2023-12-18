@@ -1,0 +1,51 @@
+class Solution {
+public:
+    vector<int> largestDivisibleSubset(vector<int>& nums) {
+        sort(nums.begin(), nums.end());
+
+        int n = nums.size();
+        vector<int> dp(n,1); //dp[i] Storing the length of divisible subset ending at nums[i]
+        vector<int>hash(n); // Storing the previous element in the divisible subset ending at nums[i]
+
+        //Do the dp part
+        for(int i=0; i<n; i++)
+        {
+            hash[i] = i; //INitializing it
+            for(int prevind=0; prevind<i; prevind++)
+            {
+                if(nums[i] % nums[prevind] == 0 && 1 + dp[prevind] > dp[i])
+                {
+                    dp[i] = 1 + dp[prevind];
+                    hash[i] = prevind;
+                }
+            }
+        }
+
+        //Storing the last element of ans
+        int ans = -1;
+        int lastindex = -1;
+
+        for(int i=0; i<n; i++)
+        {
+            if(dp[i] > ans)
+            {
+                ans = dp[i];
+                lastindex = i;
+            }
+        }
+
+        vector<int> temp;
+        temp.push_back(nums[lastindex]);
+
+        //Storing all the element
+        while(hash[lastindex] != lastindex)
+        {
+            lastindex = hash[lastindex];
+            temp.push_back(nums[lastindex]);
+        }
+
+        reverse(temp.begin(), temp.end());
+
+        return temp;
+    }
+};

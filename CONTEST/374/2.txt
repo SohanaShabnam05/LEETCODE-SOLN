@@ -1,0 +1,36 @@
+You are given a 0-indexed integer array coins, representing the values of the coins available, and an integer target.
+
+An integer x is obtainable if there exists a subsequence of coins that sums to x.
+
+Return the minimum number of coins of any value that need to be added to the array so that every integer in the range [1, target] is obtainable.
+
+A subsequence of an array is a new non-empty array that is formed from the original array by deleting some (possibly none) of the elements without disturbing the relative positions of the remaining elements.
+
+
+class Solution {
+public:
+    int minimumAddedCoins(vector<int>& coins, int target) {
+        int n = coins.size();
+        int i = 0;
+        int j = 0;
+
+        sort(coins.begin(), coins.end());
+        int cnt = 0;
+
+        while(i<target)
+        {
+            if(j<n && coins[j] <= i+1)
+            {
+                i += coins[j];
+                j++;
+            }
+            else
+            {
+                i += (i+1);
+                cnt++;
+            }
+        }
+
+        return cnt;
+    }
+};

@@ -1,0 +1,34 @@
+class Solution {
+public:
+    bool isPathCrossing(string path) {
+        int x = 0;
+        int y = 0;
+        unordered_set<string> st;
+        st.insert("0,0");
+
+        for(char c: path)
+        {
+            if(c == 'N')x++;
+            else if(c == 'S')x--;
+            else if(c == 'E')y++;
+            else
+            {
+                y--;
+            }
+
+            string cord = to_string(x) + "," + to_string(y);
+
+            if(st.find(cord) != st.end())
+            {
+                return true;
+            }
+            else
+            {
+                st.insert(cord);
+            }
+
+        }
+
+        return false;
+    }
+};

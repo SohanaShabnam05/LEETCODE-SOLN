@@ -1,0 +1,57 @@
+1335 >> Minimum Difficulty of a JOB Schedule --->>>
+
+You want to schedule a list of jobs in d days. Jobs are dependent (i.e To work on the ith job, you have to finish all the jobs j where 0 <= j < i).
+You have to finish at least one task every day. The difficulty of a job schedule is the sum of difficulties of each day of the d days. The difficulty of a day is the maximum difficulty of a job done on that day.
+You are given an integer array jobDifficulty and an integer d. The difficulty of the ith job is jobDifficulty[i].
+Return the minimum difficulty of a job schedule. If you cannot find a schedule for the jobs return -1
+
+SOL****
+
+##MEMOIZATION*****
+
+class Solution {
+public:
+    int f(vector<int>& jobDiff, int n, int idx, int d, vector<vector<int>>& dp)
+    {
+
+        if(dp[idx][d] != -1)
+        {
+            return dp[idx][d];
+        }
+        
+        if(d == 1)
+        {
+            int maxD = jobDiff[idx];
+             for(int i=idx; i<jobDiff.size(); i++)
+            {
+                maxD = max(maxD,jobDiff[i]);
+            }
+            return maxD;
+        }
+
+        int maxD = jobDiff[idx];
+        int finalResult = INT_MAX;
+
+        for(int i=idx; i<=n-d; i++)
+        {
+            maxD = max(maxD, jobDiff[i]);
+
+            int result = maxD + f(jobDiff, n, i+1, d-1, dp);
+
+            //Optimal
+            finalResult = min(result, finalResult);
+        }
+       
+       return dp[idx][d] = finalResult;
+    }
+    int minDifficulty(vector<int>& jobDiff, int d) {
+        int n = jobDiff.size();
+        vector<vector<int>> dp(n+1,vector<int>(n+1, -1));
+        if(n < d)
+        {
+            return -1;
+        }
+
+        return f(jobDiff, n, 0, d, dp);
+    }
+};

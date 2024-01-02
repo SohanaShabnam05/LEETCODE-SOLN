@@ -1,0 +1,50 @@
+2982>> 
+FIND LONGEST SPECIAL SUBSTRING THAT OCCURS THRICE II
+Sol**********
+
+class Solution {
+public:
+    int maximumLength(string s) {
+        int n = s.length();
+        
+        vector<pair<char, int>> chunks;
+
+
+        //Creating chunks
+        for(int i=0; i<n; )
+        {
+            int j = i;
+            while(j<n && s[i] == s[j])
+            {
+                j++;
+            }
+
+            chunks.push_back({s[i], j-i});
+            i=j;
+        }
+
+
+        //Storing them
+        map<pair<char, int>, int> freq;
+        for(auto v: chunks)
+        {
+            freq[{v.first, v.second}]++;
+            if(v.second > 1) freq[{v.first, v.second-1}]+=2;
+            if(v.second > 2) freq[{v.first, v.second-2}]+=3;
+        }
+
+        int bestlen = -1;
+        for(auto v : freq)
+        {
+            if(v.second >= 3)
+            {
+                if(v.second >= 3)
+                {
+                    bestlen = max(bestlen, v.first.second);
+                }
+            }
+        }
+
+        return bestlen;
+    }
+};

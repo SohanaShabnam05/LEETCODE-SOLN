@@ -1,0 +1,85 @@
+OPTIMIZE SOLUTION USING stack
+
+Given an array of integers arr, find the sum of min(b), where b ranges over every (contiguous) subarray of arr. Since the answer may be large, return the answer modulo 109 + 7.
+
+Example 1:
+
+
+class Solution {
+public:
+//{ 2 , 3, 2, 4, 2, 1 } -->> for this test case Duplicate asbe
+//Ter jonno ami NSL e arr[st.top()] >= arr[i] karechi bki NSR e only ">" use karechi
+//Je kono akta te >= use karelei habe
+    vector<int> getNSL(vector<int>& arr, int n)
+    {
+        vector<int> res(n);
+        stack<int> st;
+        for(int i=0; i<n; i++)
+        {
+            if(st.empty())
+            {
+                res[i] = -1;
+            }
+            else
+            {
+                while(!st.empty() && arr[st.top()] >= arr[i])
+                {
+                    st.pop();
+                }
+                res[i] = st.empty() ? -1 : st.top();
+            }
+            st.push(i);
+        }
+        return res;
+    }
+
+    vector<int> getNSR(vector<int>& arr, int n)
+    {
+        vector<int> res(n);
+        stack<int> st;
+        for(int i=n-1; i >= 0; i--)
+        {
+            if(st.empty())
+            {
+                res[i] = n;
+            }
+            else
+            {
+                while(!st.empty() && arr[st.top()] > arr[i])
+                {
+                    st.pop();
+                }
+                res[i] = st.empty() ? n : st.top();
+            }
+            st.push(i);
+        }
+        return res;
+    }
+
+    int sumSubarrayMins(vector<int>& arr) {
+        int n = arr.size();
+
+        vector<int> NSL = getNSL(arr, n);
+        vector<int> NSR = getNSR(arr, n);
+
+        long long sum = 0;
+
+        int M = 1e9+7;
+
+        for(int i=0; i<n; i++)
+        {
+            long long ls = i - NSL[i];
+            long long rs = NSR[i] - i;
+
+            long long total_ways = ls*rs;
+
+            //total_ways subarray hbe jar minimum arr[i]
+            long long total_sum = arr[i]*total_ways;
+
+            sum = (sum + total_sum)%M;
+        }
+
+        return sum;
+
+    }
+};

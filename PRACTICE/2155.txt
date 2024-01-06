@@ -1,0 +1,88 @@
+PROBLEM:
+
+ou are given a 0-indexed binary array nums of length n. nums can be divided at index i (where 0 <= i <= n) into two arrays (possibly empty) numsleft and numsright:
+
+numsleft has all the elements of nums between index 0 and i - 1 (inclusive), while numsright has all the elements of nums between index i and n - 1 (inclusive).
+If i == 0, numsleft is empty, while numsright has all the elements of nums.
+If i == n, numsleft has all the elements of nums, while numsright is empty.
+The division score of an index i is the sum of the number of 0's in numsleft and the number of 1's in numsright.
+
+Return all distinct indices that have the highest possible division score. You may return the answer in any order.
+
+
+SOL*****
+2 Approaches --------
+
+
+class Solution {
+public:
+    vector<int> maxScoreIndices(vector<int>& nums) {
+        // int rightone = accumulate(begin(nums), end(nums), 0);
+        // int leftzero = 0;
+        // int maxScore = 0;
+
+        // vector<int> res;
+        // int n = nums.size();
+
+        // for(int i=0; i<=n; i++)
+        // {
+        //     if(rightone+leftzero > maxScore)
+        //     {
+        //         maxScore = rightone + leftzero;
+        //         res.clear();
+        //         res.push_back(i);
+        //     }
+
+        // else if(rightone + leftzero == maxScore) res.push_back(i);
+
+        // if(i != nums.size())
+        // {
+        //     if(nums[i] == 0) leftzero++;
+        //     if(nums[i] == 1) rightone--;
+        // }
+
+        // }
+
+        // return res;
+
+
+        //2nd Approach
+        int n = nums.size();
+        vector<int> left(n+1, 0), right(n+1, 0);
+
+
+        //At the index left[i] give no of 0's till (i-1) index and 
+        for(int i=1; i<=n; i++)
+        {
+            left[i] = left[i-1];
+            if(nums[i-1] == 0) left[i] += 1;
+        }
+
+        //right[i] give no of 1's from i to nums.size()
+        for(int i=n-1; i>=0; i--)
+        {
+            right[i] = right[i+1];
+            if(nums[i] == 1)
+            {
+                right[i] += 1;
+            }
+        }
+
+        int maxi = 0;
+        vector<int> ans;
+
+        for(int i=0; i<=n; i++)
+        {
+            maxi = max(maxi, left[i]+right[i]);
+        }
+
+        for(int i=0; i<=n; i++)
+        {
+            if(maxi == left[i]+right[i])
+            {
+                ans.push_back(i);
+            }
+        }
+        return ans;
+    }
+};

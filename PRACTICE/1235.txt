@@ -1,0 +1,80 @@
+We have n jobs, where every job is scheduled to be done from startTime[i] to endTime[i], obtaining a profit of profit[i].
+You're given the startTime, endTime and profit arrays, return the maximum profit you can take such that there are no two jobs in the subset with overlapping time range.
+If you choose a job that ends at time X you will be able to start another job that starts at time X.
+
+ 
+
+
+
+SOLN******
+
+class Solution {
+public:
+    //find the first job jer starting_point >= current_job end point
+    int n;
+    int getNextIndex(vector<vector<int>> &arr, int l, int currentJobEnd)
+    {
+        int r = n-1;
+        int res = n+1;
+
+        while(l <= r)
+        {
+            int mid = l + (r-l)/2;
+
+            if(arr[mid][0] >= currentJobEnd) //We can take this task
+            {
+                res = mid; 
+                r = mid - 1;
+            }
+            else
+            {
+                l = mid + 1;
+            }
+        }
+
+        return res;
+    } 
+    int f(vector<vector<int>>& arr, int i, vector<int> &dp)
+    {
+        if(i >= n)
+        {
+            return 0;
+        }
+
+        if(dp[i] != -1)
+        {
+            return dp[i];
+        }
+
+        int next = getNextIndex(arr, i+1, arr[i][1]);
+        int take = arr[i][2] + f(arr, next, dp);
+        int nottake = f(arr, i+1, dp);
+
+        dp[i] = max(take, nottake);
+
+        return dp[i];
+    }
+    int jobScheduling(vector<int>& startTime, vector<int>& endTime, vector<int>& profit) {
+        n = profit.size();
+
+        vector<vector<int>> arr(n, vector<int>(3, 0)); //{start, end , profit}
+        vector<int> dp(n, -1);
+
+        for(int i=0; i<n; i++)
+        {
+            arr[i][0] = startTime[i];
+            arr[i][1] = endTime[i];
+            arr[i][2] = profit[i];
+        }
+
+        auto comp = [&](auto& v1, auto& v2)
+        {
+            return v1[0] <= v2[0];
+        };
+
+        //Sort According to startTime
+        sort(begin(arr), end(arr), comp);
+
+        return f(arr, 0, dp);
+    }
+};
